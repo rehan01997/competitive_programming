@@ -45,5 +45,5 @@ int main()
     for(string s: ans)
     {
         cout<<s<<" ";
-    }
+    } 
 }
