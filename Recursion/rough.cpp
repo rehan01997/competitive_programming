@@ -1,87 +1,79 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-void prob4(long long int n,long long int p)
-{
+class MinStack {
+public:
+    stack<signed long int> st;
+    signed long int MinSf = 0;
+    /** initialize your data structure here. */
+    MinStack() {
+        
+    }
     
-
-    vector<long long int> vect(n);
-
-    for(int i = 0;i<n;i++){
-        cin>>vect[i];
-    }
-
-    vector<int> find;
-
-    for(int i = 0;i<n;i++)
-    {
-        if(vect[i]==1 || vect[i]==p) continue;
-
-        if(vect[i] > p)
+    void push(signed long int val){
+        if (st.size() == 0)
         {
-            cout<<"YES ";
-            for(int j = 0;j<n;j++)
-            {
-                if(j==i) cout<<"1"<<" ";
-                else cout<<"0"<<" ";
-            }
+            st.push(val);
+            MinSf = val;
             return;
         }
 
-        if(p%vect[i] !=0)
+        if (MinSf < val)
+            st.push(val);
+        else
         {
-            long long int z = p/vect[i];
-
-            cout<<"YES ";
-            for(int j = 0;j<n;j++)
-            {
-                if(j==i) cout<<z+1<<" ";
-                else cout<<"0"<<" ";
-            }
-            return;
-
+            st.push(2 * val - MinSf);
+            MinSf = val;
         }
-            if(find.size())
-            {
-                for(int k = 0;k<find.size();k++)
-                {
-                    int rem = p-vect[i];
-                    
-                    if(rem%vect[find[k]]!=0)
-                    {
-                        cout<<"YES ";
-                        for(int j = 0;j<n;j++)
-                        {
-                            if(j==find[k])
-                                cout<<rem/vect[find[k]]+1<<" ";
-                            else if(i==j) cout<<1<<" ";
-                            else cout<<"0 ";
-                        }
-                        return ;
-                    }
-                }
-                find.push_back(i);
-
-            }
-
-           if(find.size()==0){
-                find.push_back(i);
-            }
+        
     }
+    
+    void pop() {
 
-    cout<<"NO";
-}
+        if (st.size() == 0)
+            cout<<-1;
 
-int main() {
-    int t; cin>>t;
+        if (st.top() < MinSf)
+        {
+            signed long int j = st.top();
+            st.pop();
+            signed long int actualValue = MinSf;
 
-    while(t--)
-    {
-        long long int n,p; 
-        cin>>n>>p;
-        prob4(n,p);
-        cout<<endl;
+            signed long int recoveredMinSf = 2 * MinSf - j;
+
+            MinSf = recoveredMinSf;
+            cout<<actualValue;
+        }
+        else
+        {
+            signed long int j = st.top();
+            st.pop();
+            cout<<j;
+        }
+        
     }
+    
+    signed long int top() {
+        if (st.size() == 0)
+            return -1;
 
+        if (st.top() < MinSf)
+            return MinSf;
+        else
+            return st.top();
+        
+    }
+    
+    signed long int getMin() {
+        if (st.size() == 0)
+            return -1;
+        return MinSf;
+    }
+        
+};
 
-}
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(x);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
