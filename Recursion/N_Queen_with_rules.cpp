@@ -3,7 +3,7 @@ using namespace std;
 
 bool is_safe_to_visit(vector<vector<bool> > isvisited , int x , int y )
 {
-    int xdir[] = { 0 , -1 , -1 , 1};
+    int xdir[] = { 0 , -1 , -1 , -1};
     int ydir[] = { -1 , -1 ,0 , 1};
 
     for(int d = 0 ; d < 4 ; d++)
@@ -24,20 +24,19 @@ int queen_with_rules(int tnq , vector<vector<bool> >isvisited , int vidx, string
 {
     if(tnq == 0)
     {
-        cout<<ans;
+        cout<<ans+"."<<endl;
         return 1;
     }
     int count = 0 ;
     for(int i = vidx ; i < isvisited.size()*isvisited.size() ; i++)
     {   
-
         int x = i/isvisited.size();
         int y = i%isvisited.size();  
         if( is_safe_to_visit(isvisited , x , y))
         {
             isvisited[x][y] = true;
 
-            count += queen_with_rules(tnq - 1 , isvisited , i+1 , ans+"(" + to_string(x) +"," + to_string(y) + ")" );
+            count += queen_with_rules(tnq - 1 , isvisited , i+1 , ans + to_string(x) +"-" + to_string(y) +", " );
             isvisited[x][y] = false;
         }
     }
@@ -46,8 +45,12 @@ int queen_with_rules(int tnq , vector<vector<bool> >isvisited , int vidx, string
 
 int main()
 {
-    vector<vector<bool> > isvisted(4,vector<bool>(4,false));
-    int tnq = 4;
-    queen_with_rules(tnq , isvisted , 0 ," ");
+    int n;
+    cin>>n;
+
+    vector<vector<bool> > isvisted(n,vector<bool>(n,false));
+    int tnq = n;
+    queen_with_rules(tnq , isvisted , 0 ,"");
+    cout<<endl;
     return 0 ;
 }
