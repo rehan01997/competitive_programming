@@ -87,7 +87,7 @@ void infixConversion(string exp)
 int main()
 {
     string ques;
-    cin >> ques;
+    getline(cin,ques);
     infixConversion(ques);
     return 0;
 }
