@@ -44,6 +44,16 @@ void display(Node *& temp)
     }
     return;
 }
+int size(Node *& temp)
+{
+    int mySize = 1;
+    for(int i = 0 ; i < temp->children.size() ; i++)
+    {
+        int cs = size( temp->children[i]);
+        mySize += cs;
+    }
+    return mySize;
+}
 int maxInTree(Node *& temp)
 {
     int maxValue = temp->data;
@@ -69,6 +79,98 @@ int heightGenericTree( Node *& temp)
     }
     return minheight + 1;
 }
+void traversalGenericTree(Node* &temp)
+{
+	if( temp == NULL) return;
+
+	cout << "Node Pre " << temp->data <<endl;
+	for(int i = 0 ; i < temp->children.size() ; i++)
+	{
+		Node *child = temp->children[i];
+		cout << "Edge pre " << temp->data << "--" << child -> data << endl;
+		traversalGenericTree(child);
+		cout <<"Edge Post " << temp -> data << "--" << child -> data <<endl;
+	}
+	cout << "Node Post " << temp->data << endl;
+}
+
+void levelOrdergenericTree( Node *& root)
+{
+	if(root ==  NULL)
+	{
+		return;	
+	} 
+	queue<Node*>Q;
+	Q.push(root);
+
+	while( !Q.empty())
+	{
+		Node * temp = Q.front(); Q.pop();
+		cout << temp -> data << " " ;
+		for(auto node : temp->children)
+		{
+			Q.push(node);
+		}
+		
+	}
+	return ;
+}
+void levelOrderLineWise( Node *& root)
+{
+	if( root == NULL) return;
+	queue<Node*> Q;
+	Q.push(root);
+
+	while( !Q.empty())
+	{	
+		int Qsize = Q.size();
+		for(int i = 0 ; i < Qsize ; i++ )
+		{
+			Node * temp = Q.front(); Q.pop();
+			cout << temp -> data << " " ;
+			for(auto node : temp->children)
+			{
+				Q.push(node);
+			}				
+		}cout<<endl;
+	}
+return;
+}
+void levelOrderLineWiseZigZag()
+{
+	if( root == NULL) return;
+	int curr_level = 0;
+	queue<Node*>Q;
+	stack<Node*>st;
+
+	Q.push( root ); 
+	while(!Q.empty())
+	{	
+		int Qsize = Q.size();
+		for(int i = 0 ; i < Qsize ; i++)
+		{	
+			Node * temp = Q.front(); Q.pop();
+			if( curr_level % 2 == 0)
+			{
+				cout << temp -> data << " ";	
+			}			
+			for( auto node : temp->children)
+			{
+				Q.push(node);
+				if( curr_level % 2 == 0) st.push(node);
+			}	
+		}
+		cout<<endl;
+		while(!st.empty())
+		{
+			Node * t = st.top();
+			cout<< t->data << " ";
+			st.pop();
+		}
+		curr_level++;
+	}
+	return;
+}
 int main()
 {
     int n ; cin >> n;
@@ -78,6 +180,8 @@ int main()
         cin >> arr[i];
     }
     construct(arr);
+    
+    //display(root);
     //cout<<root->data;
 
     // int maxx = maxInTree(root);
@@ -86,8 +190,15 @@ int main()
     // int height = heightGenericTree(root);
     // cout<<height << endl;
 
-    display(root);
+    //traversalGenericTree(root);
+    
+    // int siz = size(root);
+    // cout << siz << endl;
+
+    //levelOrdergenericTree(root);
+    //levelOrderLineWise( root );
+    levelOrderLineWiseZigZag();
     return 0;
-}
+} 
 // 12
 // 10 20 -1 30 50 -1 60 -1 -1 40 -1 -1
