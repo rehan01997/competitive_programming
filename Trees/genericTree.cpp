@@ -32,11 +32,12 @@ void construct(vector<int> arr)
 }
 void display(Node *& temp)
 {
-    cout << temp->data << " : ";
+    cout << temp->data << " -> ";
     for(int i = 0 ; i < temp->children.size() ; i++)
     {
-        cout << temp->children[i]->data << ",";
+        cout << temp->children[i]->data << ", ";
     }
+    cout<<".";
     cout << endl;
     for( auto child : temp->children)
     {
@@ -171,13 +172,80 @@ void levelOrderLineWiseZigZag()
 	}
 	return;
 }
+void removeLeaves(Node*& temp)
+{
+	vector<Node*> nchild ;
+	for(int i = 0 ; i < temp->children.size() ; i ++)
+	{
+		Node *curr_ch = temp->children[i];
+		if( curr_ch->children.size() > 0)
+		{
+			nchild.push_back(curr_ch);
+		}
+	}
+	temp->children = nchild;
+	for(int i= 0 ; i < temp->children.size() ; i++)
+	{
+		removeLeaves(temp->children[i]);
+	}
+}
+bool find( Node*& temp , int val)
+{
+	if( temp -> data == val) return true;
+
+	for(int i = 0 ; i < temp->children.size() ; i++)
+	{
+		bool recAns = find(temp->children[i] , val);
+		if( recAns)
+			return true;
+	}
+	return false;
+}
+void mirrorGenericTree(Node *& temp)
+{
+	for(auto node : temp->children)
+	{
+		mirrorGenericTree(node);
+	}
+	reverse(temp->children.begin() , temp->children.end());
+}
+vector<int>nodeToRootPath( Node*& temp , int val)
+{
+	if( temp -> data == val)
+	{
+		vector<int> base;
+		base.push_back(val);
+		return base;
+	}
+	vector<int> ans ;
+	for(int i = 0 ; i < temp->children.size() ; i++)
+	{
+		vector<int> recAns = nodeToRootPath( temp->children[i] , val);
+		for( auto nodeData : recAns) ans.push_back(nodeData);
+	}
+	if( !ans.empty()) ans.push_back(temp->data);
+	return ans;
+}
+int lowestCommonAncestor(int n1 , int n2)
+{
+	vector<int> num1 = nodeToRootPath(root,n1);
+	vector<int> num2 = nodeToRootPath(root,n2);
+
+	int i = num1.size() - 1;
+	int j = num2.size() - 1;
+	while( i >= 0 && j >= 0 && num1[i] == num2[j] )
+	{ 
+		i-- ; j--;
+	}
+	return num1[i + 1];
+}
 int main()
 {
     int n ; cin >> n;
     vector<int>arr(n); 
     for(int i = 0 ; i < n ; i++)
     {
-        cin >> arr[i];
+        cin >> arr[i];	
     }
     construct(arr);
     
@@ -197,8 +265,28 @@ int main()
 
     //levelOrdergenericTree(root);
     //levelOrderLineWise( root );
-    levelOrderLineWiseZigZag();
-    return 0;
-} 
+   ///levelOrderLineWiseZigZag();
+
+    //removeLeaves(root); display(root);
+
+    // int val ; cin >> val;
+    // if( find( root , val )) cout<<"true";
+    // else cout <<"false";
+    //display(root);
+    
+    // vector<int> anss = nodeToRootPath(root , 60);
+    // for(auto s : anss)
+    // {
+    // 	cout<<s<<" ";
+    // }
+    // return 0;
+
+    // int n1 , n2;
+    // cin >> n1 >> n2;
+    // int ans = lowestCommonAncestor(n1 , n2);
+    // cout << ans;
+
+    mirrorGenericTree(root); display(root);
+}
 // 12
 // 10 20 -1 30 50 -1 60 -1 -1 40 -1 -1
