@@ -381,7 +381,8 @@
     		dia_sum += recAns;
     		count = max( count , recAns);
     	}
-    	if( dia < dia_sum) dia = dia_sum;
+    	dia_sum =+ temp->children.size();
+    	if( dia_sum > dia) dia = dia_sum;
     	return count + 1;
     }
 //***************************************
@@ -416,6 +417,32 @@
     	}
     	return;
     }
+//**************************************************
+    Node *getTail(Node* temp)
+    {
+    	while(temp->children.size() > 0)
+    	{
+    		temp = temp->children[0];
+    	}
+    	return temp;
+    }
+    void linearizeGenericTree(Node * &temp)
+    {
+    	for(int i = 0 ; i < temp->children.size() ; i++)
+    	{
+    		linearizeGenericTree(temp->children[i]);
+    	}
+    	while(temp->children.size() > 1)
+    	{
+    		Node* slastTail = getTail(temp->children[temp->children.size() - 2]);
+    		Node* lastTail = temp->children[temp->children.size() - 1];
+    		temp->children.pop_back();
+    		slastTail->children.push_back(lastTail);
+    		//temp->children.pop_back();
+    	}
+    	return;
+    }    
+//******************************************************
     int main()
     {
         int n ; cin >> n;
@@ -519,12 +546,16 @@
         // int nul = diameterOfGenericTree(root);
         // cout<<dia;
 
-        int val ; cin >>val ;
-        predecessor_sucessor(root , val);
-        if( predecessor == NULL) cout<<"Predecessor = Not found";
-        else cout << "Predecessor = "<<predecessor->data<<endl;
-		if(successor == NULL) cout <<"Successor = Not found";
-		else cout<<"Successor = " << successor->data;
+  //       int val ; cin >>val ;
+  //       predecessor_sucessor(root , val);
+  //       if( predecessor == NULL) cout<<"Predecessor = Not found";
+  //       else cout << "Predecessor = "<<predecessor->data<<endl;
+		// if(successor == NULL) cout <<"Successor = Not found";
+		// else cout<<"Successor = " << successor->data;
+        display(root);
+        linearizeGenericTree(root);
+        display(root);
+
         return 0;
     }
     // 12
