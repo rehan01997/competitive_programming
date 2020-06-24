@@ -82,7 +82,6 @@ int sizeBinaryTree(Node *& node)
     }
     return c1 + c2 + 1;
 }
-
 int sumBinaryTre(Node *& node)
 {
     if( node == NULL) return 0;
@@ -107,7 +106,6 @@ int maxBinaryTree(Node *& node)
       
     return max(max(leftMax,rightMax) , node-> data);
 }
-
 int heightBinaryTree(Node *& node) {
     if(node == NULL) return -1;
     int leftHeight = heightBinaryTree(node->left);
@@ -132,7 +130,6 @@ bool find(Node *node, int data)
     }
     return false;
 }
-
 vector<int>nodeToRootPath(Node * node, int data)
 {
     if( node == NULL)
@@ -169,60 +166,56 @@ vector<int>nodeToRootPath(Node * node, int data)
     }
     return ans;
 }
-
 void PrePostAndInOrder(Node *&root)
 {
 	stack < pair< Node* , int >> st;
-	st.push( { root , 0 });
-
+	st.push( { root , 0 } );
 	string preOrder = "";
 	string postOrder = "";
 	string inOrder = "";
 	while(!st.empty())
 	{
-		pair<Node* , int > curr= st.top();
-		
-		if(curr.second == 0)
-		{	
-			st.pop();
-			st.push({ curr.first , curr.second + 1});
-			preOrder += curr.first->data + " ";
-		}	
-		else if(curr.second == 1)
-		{	//left
-			st.pop();
-			st.push({ curr.first , curr.second + 1});
-			if( curr.first->left != NULL)
-			{
-				st.push({ curr.first->left , 0 });
-			}
-		}
-		else if( curr.second == 2)
+		//pair<Node* , int > curr = st.top();		
+		if(st.top().second == 0)
 		{
-			st.pop();
-			st.push({ curr.first , curr.second + 1});
-			inOrder += curr.first->data + " ";
-		}
-		else if(curr.second == 3)
-		{	
-			//right
-			st.pop();
-			st.push({ curr.first , curr.second + 1});
-			if( curr.first->right != NULL)
-			{
-				st.push({ curr.first->right , 0 });
-			}
-		}
-		else
-		{			
-			//st.push({ curr.first , curr.second + 1 });
 			// st.pop();
 			// st.push({ curr.first , curr.second + 1});
-			postOrder += curr.first->data + " ";
-			st.pop();
+            st.top().second++;
+			preOrder += to_string(st.top().first->data) + " ";
+		}	
+		else if(st.top().second == 1)
+		{	//left
+			// st.pop();
+			// st.push({ curr.first , curr.second + 1});
+            st.top().second++;
+			if( st.top().first->left != NULL)
+			{
+				st.push({ st.top().first->left , 0 });
+			}
 		}
+		else if( st.top().second == 2)
+		{
+			// st.pop();
+			// st.push({ curr.first , curr.second + 1});
+            st.top().second++;
+			inOrder += to_string(st.top().first->data) + " ";
+		}
+		else if(st.top().second == 3)
+		{	//right
+			// st.pop();
+			// st.push({ curr.first , curr.second + 1});
+            st.top().second++;
+			if( st.top().first->right != NULL)
+			{
+				st.push({ st.top().first->right , 0 });
+			}
+		}
+		else 
+		{   postOrder += to_string(st.top().first->data) + " ";
+			st.pop();
+		}    
 	}
-
+    
 	cout << preOrder << endl;
 	cout << inOrder << endl;
 	cout << postOrder <<endl;
@@ -264,6 +257,84 @@ void levelOrderBinaryTree(Node *& root)
 		cout<<endl;
 	}
 }
+//*********************************************
+// vector<Node*> nodeToRootPath(Node *& temp , int data)
+// {
+//     if(temp == NULL) //base case
+//     {
+//         vector<Node*>base;
+//         return base;
+//     }
+//     if( temp->data == data) //base case
+//     {
+//         vector<Node*> base;
+//         base.push_back(temp);
+//         return base;
+//     }
+//     vector<Node*> ans;
+//     if( temp-> left != NULL)
+//     {
+//         vector<Node*> left = nodeToRootPath( temp->left , data);
+//         if( left.size() > 0)
+//         {
+//             left.push_back( temp );
+//         }
+//         return 
+//     }
+//     if(temp ->right != NULL)
+//     {
+//         vector<Node*> right = nodeToRootPath( temp->right , data);
+//         if( right.size() > 0)
+//         {
+//             right.push_back( temp );
+//             return right;
+//         }
+//     }
+//     return ans;
+// }
+// void printKthNodeFarFromNode (Node*& temp , int data , int k)
+// {
+//     vector<Node*> NodetoRootPath( temp , data);
+// }
+//********************************************
+Node* createLeftCloneTree(Node *& temp)
+{
+    if(temp == NULL ) return temp;
+    createLeftCloneTree( temp -> left );
+    createLeftCloneTree( temp -> right );
+
+    Node* copy = new Node( temp->data );
+    copy->left = temp->left;
+    temp->left = copy;
+
+    return temp;
+}
+Node * transformToNormalFromLeftCloned( Node *& temp )
+{
+    if( temp == NULL) return temp;
+    Node * copy = temp -> left;
+    temp -> left = copy -> left;
+    transformToNormalFromLeftCloned( temp -> left);
+    transformToNormalFromLeftCloned( temp -> right);
+    return temp;
+}
+
+void path_From_Root_Leaf_Sum_In_Range( Node *& root , string path , int sum , int l_range , int h_range)
+{
+    if( root == NULL ) return;
+    else if( root->left == NULL && root -> right == NULL )
+    {
+        sum += root->data;
+        if( sum >= l_range && sum <= h_range)
+        {
+            cout << path + to_string(root -> data) << endl;
+        }
+        return;
+    }    
+    path_From_Root_Leaf_Sum_In_Range( root -> left  , path + to_string( root->data) + " " , sum + root->data , l_range , h_range);
+    path_From_Root_Leaf_Sum_In_Range( root -> right , path + to_string( root-> data) + " " , sum + root->data, l_range , h_range);
+    return;
+}
 int main()
 {
     int n;
@@ -292,10 +363,10 @@ int main()
     Node * root = construct(arr);
     //display(root);
 
-    cout << "size : " << sizeBinaryTree(root) << endl;
-    cout << "sum : " << sumBinaryTre(root) << endl;
-    cout << "max : " << maxBinaryTree(root) << endl;
-    cout << "height : " << heightBinaryTree(root) << endl; 
+    // cout << "size : " << sizeBinaryTree(root) << endl;
+    // cout << "sum : " << sumBinaryTre(root) << endl;
+    // cout << "max : " << maxBinaryTree(root) << endl;
+    // cout << "height : " << heightBinaryTree(root) << endl; 
 
     // int val; cin >> val;
     // bool ans = find(root , val);
@@ -309,13 +380,22 @@ int main()
     // 	cout << an << " ";
     // }
 
-   // PrePostAndInOrder(root);
+    //PrePostAndInOrder(root);
 
     // int k ; cin >> k; 
     // printKlevelsDown(root , k);
     
     //levelOrderBinaryTree(root);
 
+    // root = createLeftCloneTree(root);
+    // display(root);
+
+    // root = transformToNormalFromLeftCloned( root );
+    // display(root);
+
+    int li ; cin >> li;
+    int ri ; cin >> ri;
+    path_From_Root_Leaf_Sum_In_Range( root , "" , 0 , li , ri );
     return 0 ;
 }
 //19
