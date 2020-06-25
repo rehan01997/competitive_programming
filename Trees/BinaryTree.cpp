@@ -258,20 +258,20 @@ void levelOrderBinaryTree(Node *& root)
 	}
 }
 //*********************************************
-// vector<Node*> nodeToRootPath(Node *& temp , int data)
+// vector<int> nodeToRootPath(Node *& temp , int data)
 // {
 //     if(temp == NULL) //base case
 //     {
-//         vector<Node*>base;
+//         vector<int>base;
 //         return base;
 //     }
 //     if( temp->data == data) //base case
 //     {
-//         vector<Node*> base;
+//         vector<int> base;
 //         base.push_back(temp);
 //         return base;
 //     }
-//     vector<Node*> ans;
+//     vector<int> ans;
 //     if( temp-> left != NULL)
 //     {
 //         vector<Node*> left = nodeToRootPath( temp->left , data);
@@ -292,6 +292,7 @@ void levelOrderBinaryTree(Node *& root)
 //     }
 //     return ans;
 // }
+
 // void printKthNodeFarFromNode (Node*& temp , int data , int k)
 // {
 //     vector<Node*> NodetoRootPath( temp , data);
@@ -318,7 +319,6 @@ Node * transformToNormalFromLeftCloned( Node *& temp )
     transformToNormalFromLeftCloned( temp -> right);
     return temp;
 }
-
 void path_From_Root_Leaf_Sum_In_Range( Node *& root , string path , int sum , int l_range , int h_range)
 {
     if( root == NULL ) return;
@@ -334,6 +334,46 @@ void path_From_Root_Leaf_Sum_In_Range( Node *& root , string path , int sum , in
     path_From_Root_Leaf_Sum_In_Range( root -> left  , path + to_string( root->data) + " " , sum + root->data , l_range , h_range);
     path_From_Root_Leaf_Sum_In_Range( root -> right , path + to_string( root-> data) + " " , sum + root->data, l_range , h_range);
     return;
+}
+void print_single_child_BinaryTree(Node*& temp)
+{
+	if(temp == NULL) return;
+	else if( temp->left == NULL && temp->right != NULL)
+	{
+		cout << temp -> right -> data << endl;
+	}
+	else if( temp -> left != NULL && temp -> right == NULL)
+	{
+		cout << temp -> left -> data << endl;
+	}
+
+	print_single_child_BinaryTree( temp -> left);
+	print_single_child_BinaryTree(temp -> right);
+	return;
+}
+Node *Removes_leaves_Binary_tree(Node *& root)
+{
+	if( root == NULL) return NULL;
+	else if( root -> left == NULL && root -> right == NULL)
+	{
+		return NULL;
+	}
+	root -> left = Removes_leaves_Binary_tree( root -> left );
+	root -> right = Removes_leaves_Binary_tree( root -> right );
+	return root;
+}
+int diameter(Node *& root)
+{
+	if( root == NULL) return 0;
+
+	int ld = diameter( root -> left);
+	int rd = diameter( root -> right);
+
+	int lh = heightBinaryTree(root -> left);
+	int rh = heightBinaryTree (root -> right);
+
+	int myDia = max( lh + rh + 2 , max( ld , rd));
+	return myDia;
 }
 int main()
 {
@@ -393,9 +433,16 @@ int main()
     // root = transformToNormalFromLeftCloned( root );
     // display(root);
 
-    int li ; cin >> li;
-    int ri ; cin >> ri;
-    path_From_Root_Leaf_Sum_In_Range( root , "" , 0 , li , ri );
+    // int li ; cin >> li;
+    // int ri ; cin >> ri;
+    // path_From_Root_Leaf_Sum_In_Range( root , "" , 0 , li , ri );
+
+    //print_single_child_BinaryTree( root );
+    
+    // root = Removes_leaves_Binary_tree( root );
+    // display( root );
+
+    cout << diameter( root );
     return 0 ;
 }
 //19
