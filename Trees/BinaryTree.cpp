@@ -258,45 +258,72 @@ void levelOrderBinaryTree(Node *& root)
 	}
 }
 //*********************************************
-// vector<int> nodeToRootPath(Node *& temp , int data)
-// {
-//     if(temp == NULL) //base case
-//     {
-//         vector<int>base;
-//         return base;
-//     }
-//     if( temp->data == data) //base case
-//     {
-//         vector<int> base;
-//         base.push_back(temp);
-//         return base;
-//     }
-//     vector<int> ans;
-//     if( temp-> left != NULL)
-//     {
-//         vector<Node*> left = nodeToRootPath( temp->left , data);
-//         if( left.size() > 0)
-//         {
-//             left.push_back( temp );
-//         }
-//         return 
-//     }
-//     if(temp ->right != NULL)
-//     {
-//         vector<Node*> right = nodeToRootPath( temp->right , data);
-//         if( right.size() > 0)
-//         {
-//             right.push_back( temp );
-//             return right;
-//         }
-//     }
-//     return ans;
-// }
-
-// void printKthNodeFarFromNode (Node*& temp , int data , int k)
-// {
-//     vector<Node*> NodetoRootPath( temp , data);
-// }
+vector<Node*> NTRP(Node *& temp , int data)
+{
+    if(temp == NULL) //base case
+    {
+        vector<Node*>base;
+        return base;
+    }
+    if( temp->data == data) //base case
+    {
+        vector<Node*> base;
+        base.push_back(temp );
+        return base;
+    }
+    vector<Node*> ans;
+    if( temp-> left != NULL)
+    {
+        vector<Node*> left = NTRP( temp->left , data);
+        for(auto node : left)
+        {
+            ans.push_back(node);
+        }
+    }
+    if(temp ->right != NULL)
+    {
+        vector<Node*> right = NTRP( temp -> right , data);
+        for(auto node : right)
+        {
+            ans.push_back(node);
+        }
+    }
+    if( ans.size() > 0) ans.push_back(temp);
+    return ans;
+}
+void printKdown( Node *& temp , Node*& blockage , int k)
+{
+    if( temp == NULL ) return;    
+    if( k == 0)
+    {
+        cout << temp ->data << endl;
+        return;
+    }
+    if( temp -> left != blockage)
+    {
+        printKdown( temp -> left , blockage , k - 1 );
+    }
+    if( temp -> right != blockage)
+    {
+        printKdown( temp -> right , blockage , k- 1 );
+    }
+    return;
+}
+void printKthNodeFarFromNode (Node*& temp , int data , int k)
+{
+    vector<Node*> ntrp = NTRP( temp , data);
+    // for(auto n : ntrp)
+    // {
+    //     cout << n->data << "  ";
+    // }
+    for(int i = 0 ; i < ntrp.size() , i <= k ; i ++)
+    {
+        Node * blockage = NULL;
+        if( i > 0 ) blockage = ntrp[ i - 1 ];
+        printKdown( ntrp[i] , blockage , k - i );
+    }
+    return;
+}
 //********************************************
 Node* createLeftCloneTree(Node *& temp)
 {
@@ -362,6 +389,7 @@ Node *Removes_leaves_Binary_tree(Node *& root)
 	root -> right = Removes_leaves_Binary_tree( root -> right );
 	return root;
 }
+//******************* diameter1 *********
 int diameter1(Node *& root)
 {
 	if( root == NULL) return 0;
@@ -375,8 +403,7 @@ int diameter1(Node *& root)
 	int myDia = max( lh + rh + 2 , max( ld , rd));
 	return myDia;
 }
-//*******diameter 2**
-
+//******* diameter 2 *******
 pair<int , int > diameter2(Node *& root)   //height , diameter
 {
 	if( root == NULL)
@@ -447,6 +474,10 @@ int main()
     
     //levelOrderBinaryTree(root);
 
+    int data; cin >> data;
+    int k ; cin >> k;
+    printKthNodeFarFromNode( root , data , k );
+
     // root = createLeftCloneTree(root);
     // display(root);
 
@@ -464,8 +495,8 @@ int main()
 
     //cout << diameter1( root );
 
-    pair<int , int > ans = diameter2( root );
-    cout << ans.second;
+    // pair<int , int > ans = diameter2( root );
+    // cout << ans.second;
     return 0 ;
 }
 //19
