@@ -362,12 +362,12 @@ Node *Removes_leaves_Binary_tree(Node *& root)
 	root -> right = Removes_leaves_Binary_tree( root -> right );
 	return root;
 }
-int diameter(Node *& root)
+int diameter1(Node *& root)
 {
 	if( root == NULL) return 0;
 
-	int ld = diameter( root -> left);
-	int rd = diameter( root -> right);
+	int ld = diameter1( root -> left);
+	int rd = diameter1( root -> right);
 
 	int lh = heightBinaryTree(root -> left);
 	int rh = heightBinaryTree (root -> right);
@@ -375,9 +375,29 @@ int diameter(Node *& root)
 	int myDia = max( lh + rh + 2 , max( ld , rd));
 	return myDia;
 }
-int main()
+//*******diameter 2**
+
+pair<int , int > diameter2(Node *& root)   //height , diameter
 {
-    int n;
+	if( root == NULL)
+	{
+		return { -1 , 0 } ;//(pair<int , int >( -1 , 0 ));
+	}
+	pair<int , int > l_pair = diameter2( root -> left);
+	pair<int , int > r_pair = diameter2( root -> right );
+
+	int l_he = l_pair.first;
+	int r_he = r_pair.first;
+	int l_dia = l_pair.second;
+	int r_dia = r_pair.second;
+
+	int final_hei = max( l_he , r_he) + 1;
+	int final_dia = max( l_he + r_he + 2 , max( l_dia, r_dia));
+
+	return (pair<int, int> (final_hei , final_dia));
+}
+int main()
+{    int n;
     cin >> n;
     vector<string> tree(n);
     for(int i = 0 ; i < n ; i++)
@@ -442,7 +462,10 @@ int main()
     // root = Removes_leaves_Binary_tree( root );
     // display( root );
 
-    cout << diameter( root );
+    //cout << diameter1( root );
+
+    pair<int , int > ans = diameter2( root );
+    cout << ans.second;
     return 0 ;
 }
 //19
