@@ -423,6 +423,116 @@ pair<int , int > diameter2(Node *& root)   //height , diameter
 
 	return (pair<int, int> (final_hei , final_dia));
 }
+//********** tilt*****
+int tilt = 0;
+int tilt_binary_tree(Node *& root)
+{
+	if( root == NULL ) return 0;
+
+	int l_sum = tilt_binary_tree( root -> left);
+	int r_sum = tilt_binary_tree( root -> right);
+
+	int abs_diff = abs( l_sum - r_sum);
+	
+	tilt += abs_diff;
+
+	return l_sum + r_sum + root -> data;
+}
+//***************isbalnced
+bool isBalancedTree1(Node *& root)
+{
+	if( root == NULL) return true;
+
+	bool l_tree = isBalancedTree1( root -> left);
+	bool r_tree = isBalancedTree1( root -> right);
+
+	int l_height = heightBinaryTree( root -> left);
+	int r_height = heightBinaryTree( root -> right);
+
+	if( abs( l_height - r_height) <= 1 && l_tree && r_tree) return true;
+	return false;
+}
+
+pair<bool , int > isBalancedTree2(Node *&  root)    //isbalanced , height
+{
+	if(root == NULL ) return { true , -1};
+
+	pair<bool , int > l_tree = isBalancedTree2( root -> left);
+	pair<bool , int > r_tree = isBalancedTree2( root -> right);
+
+	int l_height = l_tree.second;
+	int r_height = r_tree.second;
+	bool isbalanced = false;
+
+	if( abs( l_height - r_height) <= 1 && l_tree.first && r_tree.first) 
+	{
+		isbalanced = true;
+	}
+	int final_hei = max( l_height , r_height) + 1;
+	return { isbalanced , final_hei};
+}
+bool isBalancedTree( Node *& root)
+{
+	pair< bool , int> ans = isBalancedTree2( root);
+	return ans.first;
+}
+//*******************largest bst subtree******
+class lbst
+{
+	public:
+		int minn;
+		bool isbst;
+		int maxx;
+		int no_nodes;
+};
+pair<int ,int > lrgst_bst_subtree = { -1 , -1};    //node->data , no_of_ndes
+lbst * largestBstsubtree( Node *& root)
+{
+	if( root == NULL)
+	{
+		lbst * base = new lbst();
+		base -> minn = INT_MAX;
+		base -> isbst = true;
+		base -> maxx = INT_MIN;
+		base -> no_nodes = 0;
+		return base;
+	}
+	if( root ->left == NULL && root -> right == NULL)
+	{
+		lbst * base = new lbst();
+		base -> minn = root -> data;
+		base -> isbst = true;
+		base -> maxx = root -> data;
+		base -> no_nodes = 1;
+	}
+
+	lbst * l_ans = largestBstsubtree( root -> left);
+	lbst * r_ans = largestBstsubtree( root -> right);
+
+	lbst * ans = new lbst();
+	bool isbalnced = false;
+	if( l_ans -> isbst && r_ans -> isbst && root->data > l_ans->maxx
+		 && root->data < r_ans->minn)
+	{
+		isbalnced = true;
+	}
+	ans -> isbst = isbalnced;
+	ans -> no_nodes = l_ans->no_nodes + r_ans-> no_nodes + 1;
+	if( ans -> isbst && lrgst_bst_subtree.second < ans->no_nodes)
+	{
+		lrgst_bst_subtree.first = root->data;
+		lrgst_bst_subtree.second = ans->no_nodes; 
+	}
+	if( ans -> isbst)
+	{
+		if( root -> left == NULL) ans->minn = root->data;
+		else ans->minn = l_ans->minn;
+
+		if( root->right == NULL) ans->maxx = root->data;
+		else ans->maxx = r_ans->maxx;
+	}
+	return ans;
+}
 int main()
 {    int n;
     cin >> n;
@@ -474,9 +584,9 @@ int main()
     
     //levelOrderBinaryTree(root);
 
-    int data; cin >> data;
-    int k ; cin >> k;
-    printKthNodeFarFromNode( root , data , k );
+    // int data; cin >> data;
+    // int k ; cin >> k;
+    // printKthNodeFarFromNode( root , data , k );
 
     // root = createLeftCloneTree(root);
     // display(root);
@@ -497,6 +607,22 @@ int main()
 
     // pair<int , int > ans = diameter2( root );
     // cout << ans.second;
+   	
+   	// tilt_binary_tree(root);
+   	// cout << tilt;
+    
+    //NOT OPTIMISED
+    // bool ans = isBalancedTree(root);
+    // if( ans ) cout << "true";
+    // else cout << "false";
+
+    // //OPTIMIZED
+    // bool ans = isBalancedTree( root);
+    // if( ans ) cout << "true";
+    // else cout << "false";
+    
+    lbst * ans = largestBstsubtree( root );
+    cout << lrgst_bst_subtree.first << "@" << lrgst_bst_subtree.second;
     return 0 ;
 }
 //19
