@@ -166,6 +166,84 @@ void hPAC(int src , vector<bool>&visited , vector<int>&path)
 	visited[src] = false;						//backtracking
 	return;
 }
+void bfs( int src)
+{
+	queue<pair<int,string>> q;
+	vector<bool>visited( graph.size() , false);
+	q.push( { src , to_string( src ) });
+	
+	while( !q.empty())
+	{
+		pair<int , string > curr = q.front();  
+		q.pop();
+
+		if(!visited[curr.first])
+		{
+			cout << curr.first <<"@" << curr.second << endl;	
+		}
+		//else continue;
+		visited[ curr.first ] = true;
+		
+		for(int e = 0 ; e < graph[ curr.first ].size() ; e++)
+		{
+			Edge * cP = graph[curr.first][e];
+			if( !visited[ cP -> v] )
+			{
+				q.push( { cP -> v , curr.second + to_string( cP -> v)});
+			}
+		}	
+	}
+}
+//************shortestPathinWeights*******
+class bfds
+{
+	public:
+		int src;
+		int weightSofar;
+		string path;
+
+		bfds(int src , int weightSofar , string path)
+		{
+			this -> src = src;
+			this -> weightSofar = weightSofar;
+			this -> path = path;
+		}
+};
+class compare
+{
+	public:
+		bool operator()(const bfds * p1 ,const bfds * p2 )
+		{
+			return p1 -> weightSofar > p2 -> weightSofar; 
+		}
+};
+void shortestPathInWeights(int src)
+{
+	priority_queue<bfds* , vector<bfds*> , compare> q;
+	vector<bool>visited( graph.size() , false);
+	q.push( new bfds(src , 0 , to_string(src) ));
+
+	while( !q.empty())
+	{
+		bfds * curr = q.top();  q.pop();
+		
+		if(!visited[ curr -> src ])
+		{
+			cout << curr -> src <<" via " << curr->path << " @ " << curr->weightSofar << endl;	
+		}
+		visited[ curr -> src] = true;
+
+		for(int e = 0 ; e < graph[curr -> src].size() ; e++)
+		{
+			Edge* cuurP = graph[curr->src][e];
+			if( !visited[ cuurP -> v] )
+			{
+				q.push(new bfds( cuurP->v , curr->weightSofar + cuurP -> wt , curr->path + to_string( cuurP->v ) )); 
+			}
+		}
+	} 
+} 
+
 int main()
 {
 	int no_vertex;
@@ -189,9 +267,9 @@ int main()
 
 	// int s,d;
 	// cin >> s >> d;
-	// vector<bool> isVisited( no_vertex ,false);
-	// bool ans = hasPath( s ,d, isVisited);
-	// if( ans ) cout << "true";
+	// vector<bool> isVisited( no_vertex , false );
+	// bool ans = hasPath( s , d , isVisited );
+	// if( ans ) cout << "true"; 
 	// else cout << "false";
 
 	// int s,d;
@@ -228,10 +306,19 @@ int main()
     // else cout <<"false";
 
 	//****hamiltom
+	// int src;
+	// cin >> src;
+	// vector<bool>visited( graph.size() , false);
+	// vector<int>path;
+	// hPAC( src , visited , path);
+
+
+	// int src;
+	// cin >> src;
+	// bfs(src);
+
 	int src;
 	cin >> src;
-	vector<bool>visited( graph.size() , false);
-	vector<int>path;
-	hPAC( src , visited , path);
+	shortestPathInWeights( src );
 	return 0;
 }	
