@@ -79,6 +79,93 @@ vector<string> printAllPaths( int src , int dest , vector<bool>isVisited)
 	isVisited[src] = false;
 	return ans;
 }
+//***********connectd components in graph******
+
+vector<vector<int >> comps;
+
+void traverse( vector<int > & scomp , int src ,vector<bool>&visited)
+{
+	visited[src] = true;
+	scomp.push_back( src );
+	for(int i = 0 ; i < graph[src].size() ; i++)
+	{	
+		Edge * curr = graph[src][i];
+		if( !visited[ curr -> v ] )
+		{
+			traverse( scomp , curr -> v ,visited);
+		}
+	}
+	return;
+}
+void connected_edge()
+{
+	vector<bool> visited( graph.size(), false);
+	for(int src = 0 ; src < graph.size() ; src++)
+	{
+		if( !visited[src] )
+		{
+			vector<int> scomp ;
+			traverse( scomp , src ,visited );
+			comps.push_back( scomp );
+		}
+	}
+	return;
+}
+//*********isGraph connected*****
+// vector<bool>visited( graph.size() , false);
+void isGraphConnected( vector<bool> &visited ,int src )
+{
+    visited[src] = true;
+    for(int i = 0 ; i < graph[src].size() ; i++)
+    {   Edge * curr = graph[src][i];
+        if(!visited[curr -> v])
+        {
+            isGraphConnected( visited , curr -> v );
+        }
+    }
+    return;
+}
+//*********************Hamiltanion_cycle and path**
+void hPAC(int src , vector<bool>&visited , vector<int>&path)
+{
+	if( path.size() == (graph.size() - 1))  // base case
+	{
+		path.push_back( src );    //add last element
+		for(int i = 0 ; i < path.size() ; i++)      //print path`
+		{
+			cout << path[i];
+		}
+		bool isCycle = false;
+		int first_ele = path[0];                    //user given source
+		for(int e = 0 ; e < graph[src].size() ; e++)   //to comapre whether last ele is connectd to user given src
+		{
+			Edge * currE = graph[src][e];
+			if( currE -> v == first_ele)           //is yes ,its a cycle
+			{
+				isCycle = true;
+				break;
+			}
+		}
+		if( isCycle ) cout << "*";
+		else cout << ".";
+		cout << endl;
+		path.pop_back();                          //backtracking
+		return;
+	}
+	visited[ src ] = true;
+	path.push_back( src );
+	for(int i = 0 ; i < graph[src].size() ; i++)
+	{
+		Edge *curr = graph[src][i];
+		if( !visited[ curr -> v])
+		{
+			hPAC( curr -> v , visited , path);
+		}
+	}
+	path.pop_back();							//backtracking
+	visited[src] = false;						//backtracking
+	return;
+}
 int main()
 {
 	int no_vertex;
@@ -98,7 +185,7 @@ int main()
 		addEdge( src , dest , wt);
 	}
 	
-	display();
+	//display();
 
 	// int s,d;
 	// cin >> s >> d;
@@ -117,5 +204,34 @@ int main()
 	// }
 
 
+	// connected_edge();
+	// for(int i = 0 ; i < comps.size() ; i++)
+	// {
+	// 	for(int j = 0 ; j < comps[i].size() ; j++)
+	// 	{
+	// 		cout << comps[i][j] << " ";
+	// 	}cout<<endl;
+	// }
+    
+    // vector<bool>visited(graph.size() , false);
+    // isGraphConnected( visited , 0);
+    // bool ans = true;
+    // for(int i = 0 ; i < visited.size() ; i++)
+    // {
+    //     if( !visited[i] ) 
+    //     {
+    //         ans = false;
+    //         break;
+    //     }
+    // }
+    // if( ans ) cout <<"true";
+    // else cout <<"false";
+
+	//****hamiltom
+	int src;
+	cin >> src;
+	vector<bool>visited( graph.size() , false);
+	vector<int>path;
+	hPAC( src , visited , path);
 	return 0;
 }	
