@@ -279,6 +279,60 @@ void spreadOfInfection(int src , int t)
 	}
 	cout << ans;
 }
+//**********MIN WIRE required toconnect all public
+class Wire
+{
+	public:
+		int src;
+		int dest;
+		int wt;
+
+		Wire( int src , int dest , int wt)
+		{
+			this -> src = src;
+			this -> dest = dest;
+			this -> wt = wt;
+		}
+};
+class comparator
+{
+	public:
+		bool operator()( const Wire *p1 , const Wire *p2)
+		{
+			return p1 -> wt > p2 -> wt;
+		}
+};
+void min_Wire()
+{
+	priority_queue<Wire* , vector<Wire*> , comparator>q;
+	vector<bool>visited( graph.size() , false);
+	visited[0] = true;
+
+	for(int e = 0 ; e < graph[0].size() ; e++)   //from 0 to 
+	{	
+		Edge * curr = graph[0][e];
+		q.push(  new Wire( 0 , curr -> v , curr ->wt ) );
+	}
+	while ( !q.empty())
+	{
+		Wire * curr = q.top(); q.pop();
+		if( !visited[ curr -> dest] )
+		{
+			cout <<"["<< curr->dest <<"-"<<curr->src <<"@"<<curr->wt <<"]" << endl;
+			visited[ curr -> dest] = true;
+		}
+		else continue;
+
+		for(int e = 0 ; e < graph[curr->dest].size() ; e++)
+		{
+			Edge * currP = graph[curr -> dest][e];
+			if( !visited[ currP -> v])
+			{
+				q.push( new Wire( curr->dest , currP->v , currP->wt ) );
+			}
+		}
+	}
+}
 int main()
 {
 	int no_vertex;
@@ -356,8 +410,10 @@ int main()
 	// cin >> src;
 	// shortestPathInWeights( src );
 
-	int src , t;
-	cin >> src >> t;
-	spreadOfInfection( src , t);
+	// int src , t;
+	// cin >> src >> t;
+	// spreadOfInfection( src , t);
+
+	min_Wire();
 	return 0;
 }	
