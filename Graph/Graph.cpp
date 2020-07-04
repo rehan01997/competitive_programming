@@ -214,7 +214,7 @@ class compare
 	public:
 		bool operator()(const bfds * p1 ,const bfds * p2 )
 		{
-			return p1 -> weightSofar > p2 -> weightSofar; 
+			return p1 -> weightSofar >  p2 -> weightSofar; 
 		}
 };
 void shortestPathInWeights(int src)
@@ -230,8 +230,9 @@ void shortestPathInWeights(int src)
 		if(!visited[ curr -> src ])
 		{
 			cout << curr -> src <<" via " << curr->path << " @ " << curr->weightSofar << endl;	
+			visited[ curr -> src] = true;
 		}
-		visited[ curr -> src] = true;
+		else continue;	
 
 		for(int e = 0 ; e < graph[curr -> src].size() ; e++)
 		{
@@ -242,8 +243,42 @@ void shortestPathInWeights(int src)
 			}
 		}
 	} 
-} 
+}
+void spreadOfInfection(int src , int t)
+{
+	queue<int>q;
+	q.push( src );
+	int  t_elapsed = 1;
+	int ans = 0;
+	vector<bool> visited (graph.size() , false);
+	visited[src] = true;
 
+	while( !q.empty())
+	{
+		int size = q.size();
+		// int curr = q.front();  q.pop();
+		// ans ++;
+		for(int i = 0 ; i < size ; i++)
+		{			
+			int curr = q.front(); q.pop(); 
+			ans ++;
+			if( t_elapsed < t )
+			{
+				for( int e = 0 ; e < graph[curr].size() ; e++)
+				{	
+					Edge * currP = graph[curr][e];
+					if( !visited[ currP -> v])
+					{
+						q.push( currP -> v);
+						visited[ currP -> v] = true;
+					}
+				}
+			}
+		}
+		t_elapsed++;
+	}
+	cout << ans;
+}
 int main()
 {
 	int no_vertex;
@@ -317,8 +352,12 @@ int main()
 	// cin >> src;
 	// bfs(src);
 
-	int src;
-	cin >> src;
-	shortestPathInWeights( src );
+	// int src;
+	// cin >> src;
+	// shortestPathInWeights( src );
+
+	int src , t;
+	cin >> src >> t;
+	spreadOfInfection( src , t);
 	return 0;
 }	
