@@ -226,9 +226,130 @@ void reverseDataIterative()
         right->data = temp; 
 
         li++; ri--;
-    }
+    }  
 }
-int  main()
+void reversePointerIterative()
+{
+    if( size <= 1) return;
+
+    Node *prev = NULL;
+    Node *curr = head;
+
+    //tail = head;
+    while( curr != NULL) 
+    {   
+        Node *temp = curr->next;
+        curr -> next = prev;
+        prev = curr;
+        curr = temp;
+    }
+    Node * t = head;
+    head = tail;
+    tail = t;
+}
+
+//*******************_LinkedList_to_Stack_Adapter*******
+class Linked_list_To_Stack
+{
+    public:
+    list<int>LinkedList;
+    int size()
+    {
+        return LinkedList.size();
+    }
+    void push( int val)
+    {
+        LinkedList.push_back( val );
+    }
+    int pop()
+    {
+        if( LinkedList.size() == 0)
+        {
+            cout << "Stack underflow";
+            return -1;
+        }
+        int pop_val = LinkedList.back();
+        LinkedList.pop_back();
+        return pop_val;
+    }
+    int top()
+    {
+        if(LinkedList.size() == 0)
+        {
+            cout<<"Stack underflow";
+            return -1;
+        }
+        return LinkedList.back();
+    }
+};
+//********************LinkedList to Queue_adapter******
+class Linked_List_To_Queue
+{
+    public:
+    list<int>LinkedList;
+
+    int size()
+    {
+        return LinkedList.size();
+    }
+    int push( int val )
+    {
+        LinkedList.push_back( val );
+    }
+    int pop()
+    {
+        if( LinkedList.size() == 0)
+        {
+            cout << "Queue underflow";
+            return -1;
+        }
+        int pop_val = LinkedList.front();
+        LinkedList.pop_front();
+        return pop_val;
+    }
+    int top()
+    {
+        if(LinkedList.size() == 0)
+        {
+            cout << "Queue underflow";
+            return -1;
+        }
+        return LinkedList.front();
+    }
+};
+int Kth_Node_From_lastL( int k )    //k - 0 , size - 1
+{
+    Node * slow = head;
+    Node * fast = head;
+    
+    for(int i = 0 ; i < k ; i++)
+    {
+        fast = fast->next;
+    }
+    while( fast != tail)
+    {
+        slow = slow -> next;
+        fast = fast -> next;
+    }
+    return slow->data;
+}
+int midLL()
+{
+    if( size == 0)
+    {
+        cout << "List is empty";
+        return -1;
+    }
+    Node * slow = head;
+    Node * fast = head;
+    while( fast != tail && fast->next != tail)
+    {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    return slow->data;
+}
+int main()
 {   
     AddLast( 10);
     AddLast( 20);
@@ -254,6 +375,32 @@ int  main()
     // removeAtIdx(1);display();
     //removeAtIdx(2);display();
 
-    reverseDataIterative() ; display();
+    //reverseDataIterative() ; display();
+    
+    //reversePointerIterative(); display();
+
+    //********lINKED lISST TO Stack********
+    // Linked_list_To_Stack *LLtoSTACK = new Linked_list_To_Stack();
+    // LLtoSTACK->push(10);
+    // LLtoSTACK->push(20);
+    // LLtoSTACK->push(30);
+    // cout << LLtoSTACK->top() << endl; //30
+    // cout << LLtoSTACK->size() << endl; //3
+    // cout << LLtoSTACK->pop() << endl; //30
+    // cout << LLtoSTACK->top() << endl; //20
+
+    //*********LINKED_LIST_To_QUEUE************
+    // Linked_List_To_Queue * LLtoQueue = new Linked_List_To_Queue();
+    // LLtoQueue->push(10);
+    // LLtoQueue->push(20);
+    // LLtoQueue->push(30);
+    // cout << LLtoQueue->top() << endl; //10
+    // cout << LLtoQueue->pop() << endl; //10
+    // cout << LLtoQueue->top() << endl; //20
+
+    // int k; cin >> k;
+    // cout << Kth_Node_From_lastL(k);
+
+    cout << midLL();
     return 0;
 }
