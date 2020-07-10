@@ -46,8 +46,9 @@ class HashTable
         sizee++;
 
         float load_factor = size()/n;      //current size / total size
-        if( load_factor > 0.7)
-        {
+        if( load_factor > 2.0)
+        {            
+            sizee = 0;
             rehash();
         }
     }
@@ -56,7 +57,8 @@ class HashTable
         vector<list<Node*>>oldbuckets = buckets;
         int old_n = n;
         n = n * 2;
-
+        //sizee = 0;
+        
         for(int i = 0 ; i < buckets.size() ; i++) buckets[i].clear();  // clear all linkedlist
         buckets.resize( n );
         for(auto l : oldbuckets)
@@ -153,92 +155,91 @@ int main()
     //map->display();
     //cout << map->size();
 
-    string str , T;
-    getline( cin , str);  
+    // string str , str;
+    // getline( cin , str);  
 
 
-    while( str != "quit")
-    {   
-        char * spl = strtok(str, " "); 
-        else if ( spl[0] == "put")
-        {   
-            // getline(X , T , ' '); string key = T ; 
-            // getline( X , T , ' '); int val = stoi( T ); 
-            map -> insert( spl[1] , stoi(spl[2]) );
-        }
-        else if ( spl[0] == "get") {
-        //getline(X , T , ' '); 
-        string key = spl[1];
-        map -> get( key ); cout << endl;
-        }
-        else if ( spl[0] == "containsKey") {
-        //getline(X , T , ' ');
-         string key = spl[1];
-        cout << map -> containsKey( key ) << endl;
-        }
-       else if ( spl[0] == "remove") {
-        //getline(X , T , ' ');
-         string key = spl[1];
-        cout << map -> removee(key) << endl;
-        }
-       else if (spl[0] == "size") {
-        cout << map->size() << endl;
-       }
-       else if (spl[0] == "keyset"){
-        vector<string> keyy = map -> keyset();
-        for( string s : keyy ) cout << s << " ";
-        }
-       else if (spl[0] == "display")
-        {
-            map->display();
-        }
-       getline( cin , str);
-       //stringstream X(str);
-       //getline( X ,T , ' ');
-    }
+    // while( str != "quit")
+    // {   
+    //     char * spl = strtok(str, " "); 
+    //     else if ( spl[0] == "put")
+    //     {   
+    //         // getline(X , str , ' '); string key = str ; 
+    //         // getline( X , str , ' '); int val = stoi( str ); 
+    //         map -> insert( spl[1] , stoi(spl[2]) );
+    //     }
+    //     else if ( spl[0] == "get") {
+    //     //getline(X , str , ' '); 
+    //     string key = spl[1];
+    //     map -> get( key ); cout << endl;
+    //     }
+    //     else if ( spl[0] == "containsKey") {
+    //     //getline(X , str , ' ');
+    //      string key = spl[1];
+    //     cout << map -> containsKey( key ) << endl;
+    //     }
+    //    else if ( spl[0] == "remove") {
+    //     //getline(X , str , ' ');
+    //      string key = spl[1];
+    //     cout << map -> removee(key) << endl;
+    //     }
+    //    else if (spl[0] == "size") {
+    //     cout << map->size() << endl;
+    //    }
+    //    else if (spl[0] == "keyset"){
+    //     vector<string> keyy = map -> keyset();
+    //     for( string s : keyy ) cout << s << " ";
+    //     }
+    //    else if (spl[0] == "display")
+    //     {
+    //         map->display();
+    //     }
+    //    getline( cin , str);
+    //    //stringstream X(str);
+    //    //getline( X ,str , ' ');
+    // }
     
 
     // stringstream X( str );
 
-    // getline( X ,T , ' ');   
-    // while( T != "quit" || str != "quit" )
-    // {   
-    //     if( str == "quit") break;
-    //     else if ( T == "put")
-    //     {   
-    //         getline(X , T , ' '); string key = T ; 
-    //         getline( X , T , ' '); int val = stoi( T ); 
-    //         map -> insert( key , stoi(T) );
-    //     }
-    //     else if ( T == "get") {
-    //     getline(X , T , ' '); string key = T;
-    //     map -> get( key ); cout << endl;
-    //     }
-    //     else if ( T == "containsKey") {
-    //     getline(X , T , ' '); string key = T;
-    //     cout << map -> containsKey( key ) << endl;
-    //     }
-    //    else if ( T == "remove") {
-    //     getline(X , T , ' '); string key = T;
-    //     cout << map -> removee(key) << endl;
-    //     }
-    //    else if (T == "size") {
-    //     cout << map->size() << endl;
-    //    }
-    //    else if (T == "keyset"){
-    //     vector<string> keyy = map -> keyset();
-    //     for( string s : keyy ) cout << s << " ";
-    //     }
-    //    else if (T == "display")
-    //     {
-    //         map->display();
-    //     }
-    //     str = "";
-    //     T = "";
-    //    getline( cin , str);
-    //    stringstream X(str);
-    //    getline( X ,T , ' ');
-    // }
+    // getline( X ,str , ' ');  
+    string str ;
+    cin >> str; 
+    while( str != "quit" )
+    {   
+        if( str == "quit") break;
+        else if ( str == "put")
+        {   
+            string key ; cin >> key;
+            int val; cin >> val;
+            map -> insert( key , val ) ;
+        }
+        else if ( str == "get") {
+        string key ; cin >> key;
+        map -> get( key ); cout << endl;
+        }
+        else if ( str == "containsKey") {
+        string key ; cin >> key;
+        cout << map -> containsKey( key ) << endl;
+        }
+        else if ( str == "remove") {
+        string key; cin >> key;
+        cout << map -> removee(key) << endl;
+        }
+       else if (str == "size") {
+        cout << map->size() << endl;
+       }
+       else if (str == "keyset"){
+        vector<string> keyy = map -> keyset();
+        for( string s : keyy ) cout << s << " ";
+        }
+       else if (str == "display")
+        {
+            map->display();
+        }
+        string temp ; cin >> temp;
+        str = temp;
+    }
     
    // map->display();
 
