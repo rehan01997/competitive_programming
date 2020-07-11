@@ -366,25 +366,7 @@
     	return sum;
     }
 //*****************************************
-    int dia = 0;
-    int diameterOfGenericTree(Node*& temp)
-    {
-    	if(temp->children.size() == 0 )
-    	{
-    		return 0;
-    	}
-    	int count = 0;
-    	int dia_sum = 0;
-    	for(int i = 0 ; i < temp->children.size() ; i++)
-    	{
-    		int recAns = diameterOfGenericTree(temp->children[i]);
-    		dia_sum += recAns;
-    		count = max( count , recAns);
-    	}
-    	dia_sum =+ temp->children.size();
-    	if( dia_sum > dia) dia = dia_sum;
-    	return count + 1;
-    }
+  
 //***************************************
     Node* predecessor = NULL ;
     Node* successor = NULL;
