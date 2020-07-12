@@ -12,91 +12,19 @@ class Node
         next = NULL;
     }   
 };
+class LL
+{
+public:
 //************************************
-int size = 0;   ///global
-Node *head = NULL;  //global
-Node *tail = NULL;   //global
+int size;   ///global
+Node *head;  //global
+Node *tail;   //global
 //**************************************
-
-void AddLast(int val)
+LL()  
 {
-    if( head == NULL)
-    {
-        Node * n = new Node(val);        
-        n->next = head;
-        head = n;
-        tail = n;
-        size++;
-        return;
-    }
-    //Node *tail = head;
-    while(tail -> next != NULL)
-    {
-        tail = tail->next;
-    }
-    Node * n = new Node(val);
-    tail -> next = n;
-    tail = n;
-    size++;
-    return;
-}
-void removeFirst()
-{
-    if(head == NULL)
-    {
-        cout <<"List is empty"<<endl;
-        return;
-    }
-    if( head->next == NULL)
-    {
-        head = NULL;
-        tail = NULL;        
-    }
-    else
-    {
-        Node* temp = head;
-        head = head->next;
-        temp->next = NULL;
-    }
-    size--;
-    return;
-}
-void display()
-{
-    if( head == NULL)
-    {
-        cout<<"list is empty";
-        return;
-    }
-    Node *temp = head;
-    while(temp != NULL)
-    {
-        cout<<temp->data<<" "; 
-        temp = temp->next;
-    }cout<<endl;
-    return;
-}
-int getValuein(int idx)
-{
-    if( head == NULL)
-    {
-        cout<<"List is empty";
-        return -1;
-    }
-    else if( idx < size)
-    {
-        Node *temp = head;
-        while(idx != 0)
-        {
-            temp = temp->next;
-            idx -- ;
-        }
-        return temp->data;
-    }else
-    {
-        cout<<"Invalid Arguments";
-        return -1;
-    }  
+    size = 0;
+    head = NULL;
+    tail = NULL;
 }
 void addFirst(int val)
 {
@@ -143,29 +71,47 @@ void addAtIdx( int val , int idx)
     size++;
     return;    
 }
-void removeLast()
+void AddLast(int val)
+{
+    if( head == NULL)
+    {
+        Node * n = new Node(val);        
+        n->next = head;
+        head = n;
+        tail = n;
+        size++;
+        return;
+    }
+    //Node *tail = head;
+    while(tail -> next != NULL)
+    {
+        tail = tail->next;
+    }
+    Node * n = new Node(val);
+    tail -> next = n;
+    tail = n;
+    size++;
+    return;
+}
+void removeFirst()
 {
     if(head == NULL)
     {
-        cout<<"List is empty";
+        cout <<"List is empty"<<endl;
         return;
     }
-    else if( head->next == NULL)
+    if( head->next == NULL)
     {
         head = NULL;
-        tail = NULL;
+        tail = NULL;        
     }
     else
     {
-        Node *temp = head;
-        while( temp -> next != tail)
-        {
-            temp = temp -> next;
-        }
+        Node* temp = head;
+        head = head->next;
         temp->next = NULL;
-        tail = temp;
     }
-    size --;
+    size--;
     return;
 }
 void removeAtIdx(int idx)
@@ -202,7 +148,88 @@ void removeAtIdx(int idx)
         size --;
     }
 }
-//************************************************
+void removeLast()
+{
+    if(head == NULL)
+    {
+        cout<<"List is empty";
+        return;
+    }
+    else if( head->next == NULL)
+    {
+        head = NULL;
+        tail = NULL;
+    }
+    else
+    {
+        Node *temp = head;
+        while( temp -> next != tail)
+        {
+            temp = temp -> next;
+        }
+        temp->next = NULL;
+        tail = temp;
+    }
+    size --;
+    return;
+}
+void display()
+{
+    if( head == NULL)
+    {
+        cout<<"list is empty";
+        return;
+    }
+    Node *temp = head;
+    while(temp != NULL)
+    {
+        cout<<temp->data<<" "; 
+        temp = temp->next;
+    }cout<<endl;
+    return;
+}
+int getFirst()
+{
+    if( size == 0 )
+    {
+        cout << "List is empty";
+        return -1;
+    }
+    return head -> data;
+} 
+int getLast()
+{
+    if( size == 0)
+    {
+        cout << "List is empty";
+        return -1;
+    }
+    else return tail -> data;
+}
+int getAt(int idx)
+{
+    if( head == NULL)
+    {
+        cout<<"List is empty";
+        return -1;
+    }
+    else if( idx < size)
+    {
+        Node *temp = head;
+        while(idx != 0)
+        {
+            temp = temp->next;
+            idx -- ;
+        }
+        return temp->data;
+    }
+    else
+    {
+        cout<<"Invalid Arguments";
+        return -1;
+    }  
+}
+//******************REVERSE******************************
 Node * getNodeAt( int idx)
 {
     Node *temp = head;
@@ -247,7 +274,242 @@ void reversePointerIterative()
     head = tail;
     tail = t;
 }
+int Kth_Node_From_lastL( int k )    //k - 0 , size - 1
+{
+    Node * slow = head;
+    Node * fast = head;
+    
+    for(int i = 0 ; i < k ; i++)
+    {
+        fast = fast->next;
+    }
+    while( fast != tail)
+    {
+        slow = slow -> next;
+        fast = fast -> next;
+    }
+    return slow->data;
+}
+int midLL()
+{
+    if( size == 0)
+    {
+        cout << "List is empty";
+        return -1;
+    }
+    Node * slow = head;
+    Node * fast = head;
+    while( fast != tail && fast->next != tail)
+    {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    return slow->data;
+}
+list<int> mergetwo( list<int>&l1 , list<int>&l2)
+{
+    list<int> ans ;
+    auto it1 = l1.begin();
+    auto it2 = l2.begin();
+    while( it1 != l1.end() && it2 != l2.end() )
+    {
+        if( *it1 < *it2 ) { ans.push_back( *it1 ); it1++; }
+        else if( *it1 > *it2 ){ ans.push_back( *it2 ) ; it2++; }
+    }
+    while( it1 != l1.end())  { ans.push_back( *it1 ); it1++; }
+    while( it2 != l2.end())  { ans.push_back( *it2 ); it2++; }
 
+    return ans;
+}
+list<int>sort_using_tree( list<int> l , int i , int j)    // o(nlogn)   //used inbuild LL
+{
+    if( i == j)     //Base
+    {
+        list<int> base;
+        int c = 0;
+        auto it = l.begin();
+        while( it != l.end())
+        {   
+            if( c == i )
+            {
+                base.push_back( *it);
+                break;
+            }
+            c++; it++;
+        }
+        return base;
+    }
+
+    list<int>recAns;
+    int mid = ( i + j)/2;
+    list<int>left = sort_using_tree( l , i, mid);
+    list<int>right = sort_using_tree( l , mid + 1 , j);
+
+    recAns = mergetwo( left , right);
+    return recAns;
+}
+void remove_duplicates()
+{
+    if(head == NULL ) return;
+
+    Node *curr = head;
+    while( curr->next != NULL )
+    {
+        if(curr->data == curr->next->data){ curr->next = curr->next->next;}
+        else curr = curr->next;
+    }
+    return;
+}
+void odd_evenLL()    //changes to original LL
+{
+    if( head == NULL) return;
+    LL *odd = new LL();
+    LL *even = new LL();
+
+    while( this->size > 0 )
+    {
+        int val = this->getFirst();
+        this->removeFirst();
+
+        if( val % 2 == 0) even->AddLast( val);
+        else odd->AddLast( val );
+    }
+    if( odd->head != NULL && even->head != NULL)
+    {
+        this->head = odd->head;
+        odd->tail->next = even->head;
+        this->tail = even->tail;
+    } 
+    else if( odd->head != NULL)
+    {
+        this->head = odd->head;
+        this->tail = even->tail;  
+    } 
+    else
+    {
+        this->head = even->head;
+        this->tail = even->tail;
+    }  
+    this->size = odd->size + even->size;
+}
+//***************k reverse*********
+void reverseDI( int li  , int ri)
+{
+    while (li < ri)
+    {
+        Node * left = getNodeAt( li );
+        Node * right = getNodeAt( ri );
+        int temp = left->data;
+        left->data = right->data;
+        right->data = temp; 
+
+        li++; ri--;
+    } 
+    return;
+}
+void kreverse( int k )     
+{
+    //int no_t = k/size;
+    int i = 0;
+    int j;
+    while( (i + k - 1) < size - 1)
+    {
+        j = i + k - 1;
+        reverseDI( i , j);
+        i += k;
+    }
+    return;
+}
+void display_reverse(Node *& node )    //withyout changing original list
+{   
+    if(node == NULL) return;
+    Node *temp = node;
+    //int temp_val = temp->data;
+    if( temp -> next != NULL)
+    {
+        display_reverse( temp -> next);
+    }
+    cout << temp -> data<<" ";
+    return;
+}
+void reverseLLDATARecursive(int li , int ri)
+{
+    if( li >= ri) return;
+
+    reverseLLDATARecursive( li + 1 , ri - 1);
+    Node *t1 = this->getNodeAt( li );
+    Node *t2 = this->getNodeAt( ri );
+    int temp = t1->data;
+    t1->data = t2 ->data;
+    t2->data = temp;
+    return;
+}
+Node* reversePOinterRecursive(Node *node)
+{
+    if( node == NULL) return NULL;
+    if( node -> next == NULL)
+    {
+        this->head = node;
+        return node;
+    }
+    Node *node1 = reversePOinterRecursive( node -> next);
+    node1 -> next = node;
+    node -> next = NULL;
+    tail = node;
+    return node;
+}
+Node* midNode()
+{
+    if( size == 0) return NULL;
+    Node * slow = head;
+    Node * fast = head;
+    while( fast != tail && fast->next != tail)
+    {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    return slow;
+}
+bool IsPalindrome()
+    {
+       if(this->size <= 1) return true;
+       
+       Node *mid = midNode();
+       LL * nlist = new LL();
+       nlist->head = mid->next;
+       nlist->tail = this->tail;
+       nlist->size = this->size / 2;
+       this->tail = mid;
+       mid->next = NULL;
+       
+       nlist-> reverseDataIterative();
+       
+       Node *t1 = this->head;
+       Node *t2 = nlist->head;
+       
+       bool isPalin = true;
+       while(t1 != NULL && t2 != NULL)
+       {
+           if(t1->data != t2->data)
+           {
+               isPalin = false;
+               break;
+           }
+           else
+           {
+               t1 = t1->next;
+               t2 = t2->next;
+           }
+       }
+       
+       nlist->reverseDataIterative();
+       mid->next = nlist->head;
+       this->tail = nlist->tail;
+       this->size = this->size + nlist->size;
+       
+       return isPalin;
+    }
+};
 //*******************_LinkedList_to_Stack_Adapter*******
 class Linked_list_To_Stack
 {
@@ -292,7 +554,7 @@ class Linked_List_To_Queue
     {
         return LinkedList.size();
     }
-    int push( int val )
+    void push( int val )
     {
         LinkedList.push_back( val );
     }
@@ -316,68 +578,39 @@ class Linked_List_To_Queue
         }
         return LinkedList.front();
     }
+    
 };
-int Kth_Node_From_lastL( int k )    //k - 0 , size - 1
-{
-    Node * slow = head;
-    Node * fast = head;
-    
-    for(int i = 0 ; i < k ; i++)
-    {
-        fast = fast->next;
-    }
-    while( fast != tail)
-    {
-        slow = slow -> next;
-        fast = fast -> next;
-    }
-    return slow->data;
-}
-int midLL()
-{
-    if( size == 0)
-    {
-        cout << "List is empty";
-        return -1;
-    }
-    Node * slow = head;
-    Node * fast = head;
-    while( fast != tail && fast->next != tail)
-    {
-        fast = fast->next->next;
-        slow = slow->next;
-    }
-    return slow->data;
-}
 int main()
-{   
-    AddLast( 10);
-    AddLast( 20);
-    AddLast( 30);
-    AddLast(40);
-    AddLast(50);
-    display();
+{   LL *llist = new LL();
+    int n ; cin >> n;
+     for(int i = 0 ; i < n ; i++) { int no ; cin >> no ; llist->AddLast( no ); }// llist->display();
+    // llist->AddLast( 10);
+    // llist->AddLast( 20);
+    // llist->AddLast( 30);
+    // llist->AddLast(40);
+    // llist->AddLast(50);
+    // llist->display();
     
-    //removeFirst(); display();
+    //llist->removeFirst(); llist->display();
     
-    //cout << getValuein(1);
-    // addFirst(80); display();
+    //cout << llist->getAt(1);
+    // llist->addFirst(80); llist->display();
 
-    // addAtIdx( 80 , 0); display();
-    // addAtIdx( 100 , 3); display();
-    //addAtIdx( 120 , 1); display();
+    // llist->addAtIdx( 80 , 0); llist->display();
+    // llist->addAtIdx( 100 , 3); llist->display();
+    // llist->addAtIdx( 120 , 1); llist->display();
 
-    //cout<<tail->data;
+    // cout<<llist->tail->data;
     
-    //removeLast();display();
+    //llist->removeLast();llist->display();
 
-    // removeAtIdx(0);display();
-    // removeAtIdx(1);display();
-    //removeAtIdx(2);display();
+    // llist->removeAtIdx(0);llist->display();
+    // llist->removeAtIdx(1);llist->display();
+    //llist->removeAtIdx(2);llist->display();
 
-    //reverseDataIterative() ; display();
+    //llist->reverseDataIterative() ; llist->display();
     
-    //reversePointerIterative(); display();
+    //llist->reversePointerIterative(); llist->display();
 
     //********lINKED lISST TO Stack********
     // Linked_list_To_Stack *LLtoSTACK = new Linked_list_To_Stack();
@@ -401,6 +634,99 @@ int main()
     // int k; cin >> k;
     // cout << Kth_Node_From_lastL(k);
 
-    cout << midLL();
+    //cout << midLL();
+
+    //***************Merge Two LL ***************
+    // int n1 , n2;
+    // cin >> n1;
+    // list<int>l1;   //inbuild
+    // list<int>l2;    //inbuild
+    // for(int i = 0 ; i < n1 ; i++) 
+    // {
+    //     int no; cin >> no;
+    //     l1.push_back( no );
+    // } 
+    // cin >> n2;
+    // for(int i = 0 ; i < n2 ; i++) 
+    // {
+    //     int no; cin >> no;
+    //     l2.push_back( no );
+    // }
+    // list<int> ans = llist->mergetwo( l1 , l2);
+    // list<int>::iterator it;
+    // for(it = ans.begin() ; it != ans.end() ; it++) cout << (*it) <<  " ";
+    // cout << endl;
+    // for(it = l1.begin() ; it != l1.end() ; it++) cout << (*it) <<  " ";
+    // cout << endl;
+    // for(it = l2.begin() ; it != l2.end() ; it++) cout << (*it) <<  " ";
+    // cout << endl;
+
+    //***********Sort Using Recursion tree*************
+    // int n;
+    // cin >> n;
+    // list<int>l1;
+    // for(int i = 0 ; i < n ;i++)
+    // {
+    //     int no; cin >> no;
+    //     l1.push_back(no);
+    // }
+    // list<int>ans = llist->sort_using_tree( l1 , 0 , l1.size() - 1);
+    // for(auto it = ans.begin() ; it != ans.end() ; it++) cout << *it << " ";
+
+    //***********remove duplicates*************
+    // int n; cin >> n;
+    // for(int i = 0 ; i < n ; i++)
+    // {   
+    //     int val;
+    //     cin >> val;
+    //     llist->AddLast( val );
+    // }
+    // llist->remove_duplicates();
+    // llist->display();
+
+    //***********odd even LL******
+    // int n ; cin >> n;
+    // for(int i = 0; i < n ; i++) { int no ; cin >> no ; llist->AddLast( no );}
+    // llist->odd_evenLL();
+    // llist->display();
+    // int no ; cin >> no; 
+    // llist->addFirst( no );
+    // cin >>no;
+    // llist->AddLast( no );
+    // llist->display();
+
+    //*******k reverese****
+    // int n ; cin >> n;
+    // for(int i = 0 ; i < n ; i++) { int no ; cin >> no ; llist->AddLast( no );} llist->display();
+    // int k ; cin >> k;
+    // llist->kreverse( k ); llist->display();
+    
+    //***********diaply reverse**
+    // llist->display_reverse(llist->head); cout <<endl;
+    // int no ; cin >> no; 
+    // llist->AddLast( no );
+    // cin >>no;
+    // llist->addFirst( no );
+    // llist->display();
+
+    //**************reverseLLusing Data and POinter recursive******
+    // llist->reverseLLDATARecursive( 0 , llist->size - 1);// llist->display();
+    // int no ; cin >> no; 
+    // llist->AddLast( no );
+    // cin >>no;
+    // llist->addFirst( no );
+    // llist->display();
+
+    // Node * temp = llist->reversePOinterRecursive( llist->head );//  llist->display();
+    // int no ; cin >> no; 
+    // llist->AddLast( no );
+    // cin >>no;
+    // llist->addFirst( no );
+    // llist->display();        
+     
+     //***isaplindrome**
+    bool palin = llist->IsPalindrome();
+    if( palin ) cout << "true";
+    else cout << "false";
     return 0;
-}
+}   
