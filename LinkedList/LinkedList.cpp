@@ -509,6 +509,42 @@ bool IsPalindrome()
        
        return isPalin;
     }
+    //***************** ADD two linked list******
+    int add2ListHelper( Node *n1 , Node *n2 , int pvn1 , int pvn2 , LL*ans)
+    {
+        if( n1 == NULL && n2 == NULL) return 0;
+        
+        if(pvn1 == pvn2)
+        {
+            int carry = add2ListHelper( n1->next , n2->next , pvn1 - 1, pvn2 - 1 , ans);
+            int num = carry + n1->data + n2->data;
+            ans->addFirst( num % 10);
+            return num / 10;
+        }
+        else if( pvn1 > pvn2)
+        {
+            int carry = add2ListHelper( n1->next , n2 , pvn1 - 1 , pvn2 , ans);
+            int num = n1->data + carry;
+            ans->addFirst( num % 10);
+            return num / 10;
+        }
+        else
+        {
+            int carry = add2ListHelper( n1 , n2->next , pvn1 , pvn2 - 1 , ans);
+            int num = n2->data + carry;
+            ans->addFirst( num % 10 );
+            return num / 10;
+        }
+    }
+    LL *addTwoLists(LL* n1, LL* n2)
+    {
+      LL* ans = new LL();
+      
+      int carry = add2ListHelper( n1->head , n2->head , n1->size , n2->size  , ans);
+      
+      if(carry > 0) ans->addFirst(carry);
+      return ans;
+    }
 };
 //*******************_LinkedList_to_Stack_Adapter*******
 class Linked_list_To_Stack
@@ -582,8 +618,8 @@ class Linked_List_To_Queue
 };
 int main()
 {   LL *llist = new LL();
-    int n ; cin >> n;
-     for(int i = 0 ; i < n ; i++) { int no ; cin >> no ; llist->AddLast( no ); }// llist->display();
+    // int n ; cin >> n;
+    //  for(int i = 0 ; i < n ; i++) { int no ; cin >> no ; llist->AddLast( no ); }// llist->display();
     // llist->AddLast( 10);
     // llist->AddLast( 20);
     // llist->AddLast( 30);
@@ -725,8 +761,19 @@ int main()
     // llist->display();        
      
      //***isaplindrome**
-    bool palin = llist->IsPalindrome();
-    if( palin ) cout << "true";
-    else cout << "false";
+    // bool palin = llist->IsPalindrome();
+    // if( palin ) cout << "true";
+    // else cout << "false";
+
+    // LL *list1 = new LL();
+    // LL *list2 = new LL();
+    // int n ; cin >> n;
+    // for(int i = 0 ; i < n ; i++) { int no; cin >> no; list1->AddLast( no ) ;}
+    // cin >> n; 
+    // for(int i = 0 ; i < n ; i++) { int no; cin >> no; list2->AddLast( no ) ;}
+
+    // LL *ans  = llist->addTwoLists( list1 , list2);
+    // ans->display();
+
     return 0;
-}   
+}    
