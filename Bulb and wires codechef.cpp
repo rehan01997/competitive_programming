@@ -1,3 +1,0 @@
-
-
-KHUD SE KAR :: LOL
